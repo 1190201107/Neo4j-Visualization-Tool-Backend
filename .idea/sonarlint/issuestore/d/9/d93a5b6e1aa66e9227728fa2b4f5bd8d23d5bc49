@@ -1,0 +1,15 @@
+
+g
+java:S1845"LRename field "code" to prevent any misunderstanding/clash with field "CODE".(ßı²’ÿÿÿÿÿ
+m
+java:S1845"RRename field "message" to prevent any misunderstanding/clash with field "MESSAGE".(ù„è¿ûÿÿÿÿ
+b
+java:S1845"LRename field "data" to prevent any misunderstanding/clash with field "DATA".(íİµ˜
+h
+java:S1845"MRename method "code" to prevent any misunderstanding/clash with field "CODE".(Ü‹š’øÿÿÿÿ
+h
+java:S1845 "MRename method "code" to prevent any misunderstanding/clash with field "CODE".(Ö‚÷ÿÿÿÿÿ
+n
+java:S1845%"SRename method "message" to prevent any misunderstanding/clash with field "MESSAGE".(ØÄ¿ûÿÿÿÿÿ
+h
+java:S1845*"MRename method "data" to prevent any misunderstanding/clash with field "DATA".(İ³ïúÿÿÿÿ

@@ -8,7 +8,7 @@ import java.util.Map;
 
 
 @Data
-public class Neo4jBasicNode implements Serializable {
+public class Neo4jBasicNode extends Object implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * id
