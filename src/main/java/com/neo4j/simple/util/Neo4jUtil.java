@@ -495,6 +495,33 @@ public class Neo4jUtil {
         return returnList;
     }
     /**
+     * 查询边
+     *
+     * @param relationDTO
+     * @return
+     */
+    public List<Neo4jQueryRelation> queryRelationRelationships(RelationDTO relationDTO) {
+        RelationVO relationVO = formatRelation(relationDTO);
+
+        //拼接sql
+        String cypherSql = String.format("MATCH p=(a%s%s)-[r%s%s]->(b%s%s)-[*0..%s]->() RETURN p", relationVO.getStartLabelName(), relationVO.getStartNodeProperties(), relationVO.getRelationLabelName(), relationVO.getRelationProperties(), relationVO.getEndLabelName(), relationVO.getEndNodeProperties(), relationVO.getLevel());
+        System.out.println(cypherSql);
+        long startTime = System.currentTimeMillis();
+        Result query = session.query(cypherSql, new HashMap<>());
+        System.out.println(String.format("耗时%d秒", System.currentTimeMillis() - startTime));
+
+        Iterable<Map<String, Object>> maps = query.queryResults();
+        ArrayList<Neo4jQueryRelation> returnList = new ArrayList<>();
+        for (Map<String, Object> map : maps) {
+            InternalPath.SelfContainedSegment[] ps = (InternalPath.SelfContainedSegment[]) map.get("p");
+            for (InternalPath.SelfContainedSegment p : ps) {
+                returnList.add(changeToNeo4jBasicRelationReturnVOOnlyRelation(p));
+            }
+        }
+        session.clear();
+        return returnList;
+    }
+    /**
      * 格式化
      *
      * @param relationDTO
@@ -546,7 +573,23 @@ public class Neo4jUtil {
         return relationVO;
     }
 
-
+    /**
+     * 转化neo4j默认查询的参数为自定返回类型(只包含relationships)
+     *
+     * @param selfContainedSegment
+     * @return Neo4jQueryRelation
+     */
+    public Neo4jQueryRelation changeToNeo4jBasicRelationReturnVOOnlyRelation(InternalPath.SelfContainedSegment selfContainedSegment) {
+        //relationship
+        Neo4jQueryRelation neo4JQueryRelation = new Neo4jQueryRelation();
+        Relationship relationship = selfContainedSegment.relationship();
+        neo4JQueryRelation.setStart(relationship.startNodeId());
+        neo4JQueryRelation.setEnd(relationship.endNodeId());
+        neo4JQueryRelation.setId(relationship.id());
+        neo4JQueryRelation.setType(relationship.type());
+        neo4JQueryRelation.setProperty(relationship.asMap());
+        return neo4JQueryRelation;
+    }
     /**
      * 转化neo4j默认查询的参数为自定返回类型
      *

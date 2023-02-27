@@ -12,6 +12,8 @@ public interface SelectNeo4jNodeService {
 
     public List<String> selectAllLabels();
 
+    public List<String> selectAllRelationName();
+
     public HashMap<String, Map> selectAllGraph();
 
 }
