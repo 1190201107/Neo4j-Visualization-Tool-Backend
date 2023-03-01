@@ -107,8 +107,8 @@ public class Neo4jUtil {
                 labels = ":`" + String.join("`:`", node.getLabels()) + "`";
             }
             String property = "";
-            if (CommonFunction.isNotEmpty(node.getProperty())) {
-                property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperty());
+            if (CommonFunction.isNotEmpty(node.getProperties())) {
+                property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperties());
             }
             cypherSql = String.format("match(n%s%s) return n", labels, property);
         }
@@ -128,7 +128,7 @@ public class Neo4jUtil {
                 }
                 proMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
             }
-            startNodeVo.setProperty(proMap);
+            startNodeVo.setProperties(proMap);
             nodeList.add(startNodeVo);
         }
         session.clear();
@@ -149,8 +149,8 @@ public class Neo4jUtil {
             labels = ":`" + String.join("`:`", node.getLabels()) + "`";
         }
         String property = "";
-        if (CommonFunction.isNotEmpty(node.getProperty())) {
-            property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperty());
+        if (CommonFunction.isNotEmpty(node.getProperties())) {
+            property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperties());
         }
         String cypherSql = String.format("%s(%s%s)", nodup ? "MERGE" : "create", labels, property);
         Result query = session.query(cypherSql, new HashMap<>());
@@ -181,7 +181,7 @@ public class Neo4jUtil {
      */
     public boolean recreateNode(Neo4jBasicNode node){
         List<String> saveLabels = node.getLabels();
-        Map<String, Object> saveProperty = node.getProperty();
+        Map<String, Object> saveProperty = node.getProperties();
         Set<String> savePropertyKeySet = saveProperty.keySet();
         //查询用属性查询节点是不是存在。
         //存在比较标签的lable1是不是一样。不一样就这个查询到的节点（少了就新增标签，多了就删除标签）
@@ -206,7 +206,7 @@ public class Neo4jUtil {
             String addLabelStr=addLabels.isEmpty()?"":("e:"+String.join(":",addLabels));
 
             //处理属性
-            Map<String, Object> queryProperty = neo4jBasicNode.getProperty();
+            Map<String, Object> queryProperty = neo4jBasicNode.getProperties();
             Set<String> queryPropertyKeySet = queryProperty.keySet();
 
 
@@ -262,8 +262,8 @@ public class Neo4jUtil {
                     labels = ":`" + String.join("`:`", node.getLabels()) + "`";
                 }
                 String property = "";
-                if (CommonFunction.isNotEmpty(node.getProperty())) {
-                    property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperty());
+                if (CommonFunction.isNotEmpty(node.getProperties())) {
+                    property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperties());
                 }
                 String sql = String.format("(%s%s)", labels, property);
                 //对sql去重，如果有就跳过
@@ -289,8 +289,8 @@ public class Neo4jUtil {
                 labels = ":`" + String.join("`:`", node.getLabels()) + "`";
             }
             String property = "";
-            if (CommonFunction.isNotEmpty(node.getProperty())) {
-                property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperty());
+            if (CommonFunction.isNotEmpty(node.getProperties())) {
+                property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperties());
             }
             String sql = String.format("(%s%s)", labels, property);
             content.add(sql);
@@ -322,8 +322,8 @@ public class Neo4jUtil {
                 labels = ":`" + String.join("`:`", node.getLabels()) + "`";
             }
             String property = "";
-            if (CommonFunction.isNotEmpty(node.getProperty())) {
-                property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperty());
+            if (CommonFunction.isNotEmpty(node.getProperties())) {
+                property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperties());
             }
             cypherSql = String.format("match(n%s%s) ", labels, property);
         }
@@ -378,8 +378,8 @@ public class Neo4jUtil {
             startLabel = ":`" + String.join("`:`", saveRelation.getStart().getLabels()) + "`";
         }
         String startProperty = "";
-        if (CommonFunction.isNotEmpty(saveRelation.getStart().getProperty())) {
-            startProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getStart().getProperty());
+        if (CommonFunction.isNotEmpty(saveRelation.getStart().getProperties())) {
+            startProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getStart().getProperties());
         }
 
         String endLabel = "";
@@ -387,8 +387,8 @@ public class Neo4jUtil {
             endLabel = ":`" + String.join("`:`", saveRelation.getEnd().getLabels()) + "`";
         }
         String endProperty = "";
-        if (CommonFunction.isNotEmpty(saveRelation.getEnd().getProperty())) {
-            endProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getEnd().getProperty());
+        if (CommonFunction.isNotEmpty(saveRelation.getEnd().getProperties())) {
+            endProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getEnd().getProperties());
         }
         String startWhere = "";
         if (CommonFunction.isNotEmpty(saveRelation.getStart().getId())) {
@@ -413,8 +413,8 @@ public class Neo4jUtil {
             throw new RuntimeException("关系名称不能为空！");
         }
         String relationProperty = "";
-        if (CommonFunction.isNotEmpty(saveRelation.getRelationship().getProperty())) {
-            relationProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getRelationship().getProperty());
+        if (CommonFunction.isNotEmpty(saveRelation.getRelationship().getProperties())) {
+            relationProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getRelationship().getProperties());
         }
         cypherSql = String.format("MATCH (start%s%s) %s with start MATCH (end%s%s) %s MERGE (start)-[rep%s%s]->(end)", startLabel, startProperty, startWhere, endLabel, endProperty, endWhere, relationType, relationProperty);
         Result query = session.query(cypherSql, new HashMap<>());
@@ -436,8 +436,8 @@ public class Neo4jUtil {
             startLable = ":`" + String.join("`:`", saveRelation.getStart().getLabels()) + "`";
         }
         String startProperty = "";
-        if (CommonFunction.isNotEmpty(saveRelation.getStart().getProperty())) {
-            startProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getStart().getProperty());
+        if (CommonFunction.isNotEmpty(saveRelation.getStart().getProperties())) {
+            startProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getStart().getProperties());
         }
 
         String endLable = "";
@@ -445,8 +445,8 @@ public class Neo4jUtil {
             endLable = ":`" + String.join("`:`", saveRelation.getEnd().getLabels()) + "`";
         }
         String endProperty = "";
-        if (CommonFunction.isNotEmpty(saveRelation.getEnd().getProperty())) {
-            endProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getEnd().getProperty());
+        if (CommonFunction.isNotEmpty(saveRelation.getEnd().getProperties())) {
+            endProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getEnd().getProperties());
         }
 
         String relationType = "";
@@ -457,8 +457,8 @@ public class Neo4jUtil {
             throw new RuntimeException("关系名称不能为空！");
         }
         String relationProperty = "";
-        if (CommonFunction.isNotEmpty(saveRelation.getRelationship().getProperty())) {
-            relationProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getRelationship().getProperty());
+        if (CommonFunction.isNotEmpty(saveRelation.getRelationship().getProperties())) {
+            relationProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getRelationship().getProperties());
         }
         cypherSql = String.format("MERGE (start%s%s)-[rep%s%s]->(end%s%s)", startLable, startProperty, relationType, relationProperty, endLable, endProperty);
         Result query = session.query(cypherSql, new HashMap<>());
@@ -583,11 +583,11 @@ public class Neo4jUtil {
         //relationship
         Neo4jQueryRelation neo4JQueryRelation = new Neo4jQueryRelation();
         Relationship relationship = selfContainedSegment.relationship();
-        neo4JQueryRelation.setStart(relationship.startNodeId());
-        neo4JQueryRelation.setEnd(relationship.endNodeId());
+        neo4JQueryRelation.setStartNode(relationship.startNodeId());
+        neo4JQueryRelation.setEndNode(relationship.endNodeId());
         neo4JQueryRelation.setId(relationship.id());
         neo4JQueryRelation.setType(relationship.type());
-        neo4JQueryRelation.setProperty(relationship.asMap());
+        neo4JQueryRelation.setProperties(relationship.asMap());
         return neo4JQueryRelation;
     }
     /**
@@ -603,23 +603,23 @@ public class Neo4jUtil {
         Neo4jBasicNode startNodeVo = new Neo4jBasicNode();
         startNodeVo.setId(start.id());
         startNodeVo.setLabels(IteratorUtils.toList(start.labels().iterator()));
-        startNodeVo.setProperty(start.asMap());
+        startNodeVo.setProperties(start.asMap());
         neo4JBasicRelationReturnVO.setStart(startNodeVo);
         //end
         Node end = selfContainedSegment.end();
         Neo4jBasicNode endNodeVo = new Neo4jBasicNode();
         endNodeVo.setId(end.id());
         endNodeVo.setLabels(IteratorUtils.toList(end.labels().iterator()));
-        endNodeVo.setProperty(end.asMap());
+        endNodeVo.setProperties(end.asMap());
         neo4JBasicRelationReturnVO.setEnd(endNodeVo);
         //relationship
         Neo4jQueryRelation neo4JQueryRelation = new Neo4jQueryRelation();
         Relationship relationship = selfContainedSegment.relationship();
-        neo4JQueryRelation.setStart(relationship.startNodeId());
-        neo4JQueryRelation.setEnd(relationship.endNodeId());
+        neo4JQueryRelation.setStartNode(relationship.startNodeId());
+        neo4JQueryRelation.setEndNode(relationship.endNodeId());
         neo4JQueryRelation.setId(relationship.id());
         neo4JQueryRelation.setType(relationship.type());
-        neo4JQueryRelation.setProperty(relationship.asMap());
+        neo4JQueryRelation.setProperties(relationship.asMap());
         neo4JBasicRelationReturnVO.setRelationship(neo4JQueryRelation);
         return neo4JBasicRelationReturnVO;
     }

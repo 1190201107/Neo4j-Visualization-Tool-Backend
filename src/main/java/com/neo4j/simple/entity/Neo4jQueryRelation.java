@@ -12,11 +12,11 @@ public class Neo4jQueryRelation implements Serializable {
     /**
      * 开始节点id
      */
-    private Long start;
+    private Long startNode;
     /**
      * 结束节点id
      */
-    private Long end;
+    private Long endNode;
     /**
      * 关系类型
      */
@@ -29,5 +29,5 @@ public class Neo4jQueryRelation implements Serializable {
     /**
      * 标签属性
      */
-    private Map<String, Object> property;
+    private Map<String, Object> properties;
 }

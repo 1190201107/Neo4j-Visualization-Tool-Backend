@@ -25,5 +25,5 @@ public class Neo4jBasicRelation implements Serializable {
     /**
      * 标签属性
      */
-    private Map<String, Object> property;
+    private Map<String, Object> properties;
 }

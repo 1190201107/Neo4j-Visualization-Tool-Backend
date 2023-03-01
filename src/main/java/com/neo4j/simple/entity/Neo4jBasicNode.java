@@ -23,7 +23,7 @@ public class Neo4jBasicNode extends Object implements Serializable {
     /**
      * 标签属性
      */
-    private Map<String, Object> property;
+    private Map<String, Object> properties;
 
 
 }
