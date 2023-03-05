@@ -1,4 +1,4 @@
-package com.neo4j.simple.util;
+package com.neo4j.simple.common;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

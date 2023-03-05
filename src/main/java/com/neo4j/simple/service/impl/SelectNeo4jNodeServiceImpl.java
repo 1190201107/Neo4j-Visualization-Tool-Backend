@@ -15,7 +15,7 @@ import java.util.* ;
 @Service
 public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
     @Resource
-    Neo4jUtil neo4jUtil;
+    private Neo4jUtil neo4jUtil;
 
     @Override
     public List<String> selectAllLabels(){

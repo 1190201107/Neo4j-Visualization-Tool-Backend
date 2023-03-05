@@ -1,7 +1,7 @@
 package com.neo4j.simple.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.neo4j.simple.util.CommonResultSerializer;
+import com.neo4j.simple.common.CommonResultSerializer;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;

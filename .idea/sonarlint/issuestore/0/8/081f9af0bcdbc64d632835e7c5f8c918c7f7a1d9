@@ -1,0 +1,31 @@
+
+b	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(òÇ¡8ÏÎ¯¥Ú0
+c	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(ĞËìù8ĞÎ¯¥Ú0
+c	java:S112É"FDefine and throw a dedicated exception instead of using a generic one.(ĞËìù8ĞÎ¯¥Ú0
+V
+java:S1874+"9Remove this use of "QUOTE_FIELD_NAMES"; it is deprecated.(¢äÑ8èÎ¯¥Ú0
+{
+java:S3012H"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(Ôù§Àÿÿÿÿÿ8ñÎ¯¥Ú0
+p
+java:S3776¶"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(¬îÅª8…Ï¯¥Ú0
+\
+java:S1854â"9Remove this useless assignment to local variable "query".(ü‡Ûüÿÿÿÿ8‡Ï¯¥Ú0
+M
+java:S1481â"*Remove this unused "query" local variable.(ü‡Ûüÿÿÿÿ8Ï¯¥Ú0
+V	java:S106ã"9Replace this use of System.out or System.err by a logger.(ÀÌÀÈ8Ï¯¥Ú0
+?
+java:S1116é"Remove this empty statement.(ôŸìúÿÿÿÿ8Ï¯¥Ú0
+u
+java:S3776ı"RRefactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.(×ëÄÀüÿÿÿÿ8’Ï¯¥Ú0
+[	java:S106á"9Replace this use of System.out or System.err by a logger.(Ç•Øüÿÿÿÿ8®Ï¯¥Ú0
+V	java:S106ä"9Replace this use of System.out or System.err by a logger.(§şü8¯Ï¯¥Ú0
+[	java:S106ü"9Replace this use of System.out or System.err by a logger.(Ç•Øüÿÿÿÿ8Ñ¨¨âê0
+V	java:S106ÿ"9Replace this use of System.out or System.err by a logger.(§şü8Ñ¨¨âê0
+a
+java:S1155“">Use isEmpty() to check whether the collection is empty or not.(†·÷“ùÿÿÿÿ8½Ï¯¥Ú0
+\
+java:S1155¬">Use isEmpty() to check whether the collection is empty or not.(Æ©õ½8½Ï¯¥Ú0
+H
+java:S5411›"*Use the primitive boolean expression here.(×¹Ã8¿Ï¯¥Ú0
+H
+java:S5411€"*Use the primitive boolean expression here.(ò’•“8¿Ï¯¥Ú0
