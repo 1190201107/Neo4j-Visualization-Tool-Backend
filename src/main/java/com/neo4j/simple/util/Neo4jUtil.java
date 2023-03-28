@@ -429,7 +429,7 @@ public class Neo4jUtil {
      * @param saveRelation
      * @return
      */
-    public boolean creteNodeAndRelation(Neo4jSaveRelationDTO saveRelation) {
+    public boolean createNodeAndRelation(Neo4jSaveRelationDTO saveRelation) {
         String cypherSql = "";
         String startLable = "";
         if (CommonFunction.isNotEmpty(saveRelation.getStart().getLabels())) {

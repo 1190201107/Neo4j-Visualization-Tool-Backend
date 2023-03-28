@@ -17,19 +17,32 @@ public class SelectorController {
     @Resource
     private SelectNeo4jNodeService selectNeo4jNodeService;
 
+    /**
+     * 查询节点的所有标签
+     * @return
+     */
     @GetMapping("/getAllLabel")
     public CommonResult<List<String>> getAllLabel(){
         return new CommonResult<List<String>>().success().data(selectNeo4jNodeService.selectAllLabels()) ;
     }
 
+    /**
+     * 查询边的所有名称
+     * @return
+     */
     @GetMapping("/getAllRelationName")
     public CommonResult<List<String>> getAllRelationName(){
         return new CommonResult<List<String>>().success().data(selectNeo4jNodeService.selectAllRelationName()) ;
     }
 
+    /**
+     * 查询所有节点
+     * @return
+     */
     @GetMapping("/getAllGraph")
     public CommonResult<HashMap<String, Map>> getAllGraph(){
         return new CommonResult<HashMap<String, Map>>().success().data(selectNeo4jNodeService.selectAllGraph());
     }
+
 
 }

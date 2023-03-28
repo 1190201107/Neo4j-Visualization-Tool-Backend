@@ -43,4 +43,10 @@ public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
         return graph;
     }
 
+    @Override
+    public List<Neo4jBasicNode> selectNode(Neo4jBasicNode neo4jBasicNode) {
+        List<Neo4jBasicNode> neo4jBasicNodes = neo4jUtil.queryNode(neo4jBasicNode);
+        return neo4jBasicNodes;
+    }
+
 }
