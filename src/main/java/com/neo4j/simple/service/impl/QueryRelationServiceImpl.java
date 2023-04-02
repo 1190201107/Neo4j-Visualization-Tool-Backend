@@ -5,10 +5,12 @@ import com.neo4j.simple.VO.RelationDTO;
 import com.neo4j.simple.entity.Neo4jQueryRelation;
 import com.neo4j.simple.service.QueryRelationService;
 import com.neo4j.simple.util.Neo4jUtil;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+@Service
 public class QueryRelationServiceImpl implements QueryRelationService {
     @Resource
     private Neo4jUtil neo4jUtil;
