@@ -6,10 +6,13 @@ import com.neo4j.simple.entity.CommonResult;
 import com.neo4j.simple.entity.Neo4jQueryRelation;
 import com.neo4j.simple.service.QueryRelationService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class QueryRelationController {
@@ -26,5 +29,21 @@ public class QueryRelationController {
         return new CommonResult<List<Neo4jQueryRelation>>().success().data(queryRelationService.queryRelationRelationships(relationDTO));
     }
 
-
+    /**
+     * 根据关系查询节点
+     * @param Neo4jQueryRelation
+     *  {
+     *     "type": "ACTED_IN",
+     *     "properties": {
+     *         "roles": [
+     *             "Julian Mercer"
+     *         ]
+     *     }
+     * }
+     * @return
+     */
+    @PostMapping("/searchGraphByRelation")
+    public CommonResult<HashMap<String, Map>> searchGraphByRelation(@RequestBody Neo4jQueryRelation Neo4jQueryRelation){
+        return new CommonResult<HashMap<String, Map>>().success().data(queryRelationService.searchGraphByRelation(Neo4jQueryRelation));
+    }
 }

@@ -14,8 +14,10 @@ public interface SelectNeo4jNodeService {
 
     public List<String> selectAllRelationName();
 
+    public List<String> selectAllPropertiesName();
+
     public HashMap<String, Map> selectAllGraph();
 
-    public List<Neo4jBasicNode> selectNode(Neo4jBasicNode neo4jBasicNode);
+    public HashMap<String, Map> selectNode(Neo4jBasicNode neo4jBasicNode);
 
 }

@@ -2,5 +2,5 @@ package com.neo4j.simple.service;
 
 public interface ImportNodesAndRelationService {
 
-    public boolean importNodesAndRelationToExcel();
+    public boolean importNodesAndRelationToExcel(String filePath);
 }

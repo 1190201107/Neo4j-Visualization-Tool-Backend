@@ -36,6 +36,15 @@ public class SelectorController {
     }
 
     /**
+     * 查询节点的所有属性
+     * @return
+     */
+    @GetMapping("/getAllPropertiesName")
+    public CommonResult<List<String>> getAllPropertiesName(){
+        return new CommonResult<List<String>>().success().data(selectNeo4jNodeService.selectAllPropertiesName()) ;
+    }
+
+    /**
      * 查询所有节点
      * @return
      */

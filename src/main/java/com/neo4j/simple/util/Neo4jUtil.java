@@ -60,7 +60,7 @@ public class Neo4jUtil {
     /**
      * 获取所有的标签名称
      *
-     * @return
+     * @return 返回所有的标签名称
      */
     public List<String> getAllLabelName() {
         String cypherSql = "match (n) return distinct labels(n) as name";
@@ -68,9 +68,7 @@ public class Neo4jUtil {
         ArrayList<String> labelNames = new ArrayList<>();
         for (Map<String, Object> map : query.queryResults()) {
             String[] names = (String[]) map.get("name");
-            for (String name : names) {
-                labelNames.add(name);
-            }
+            labelNames.addAll(Arrays.asList(names));
 
         }
         return labelNames;
@@ -79,7 +77,7 @@ public class Neo4jUtil {
     /**
      * 获取所有的关系名称
      *
-     * @return
+     * @return 返回所有的关系名称
      */
     public List<String> getAllRelationName() {
         String cypherSql = "MATCH ()-[r]-() RETURN distinct type(r) as name";
@@ -90,6 +88,26 @@ public class Neo4jUtil {
         }
         return relationNames;
     }
+
+    /**
+     * 查找所有节点属性值
+     *
+     * @return 返回所有节点属性值
+     */
+    public List<String> getAllNodeProperty() {
+        String cypherSql = "MATCH (n) RETURN distinct keys(n) as name";
+        Result query = session.query(cypherSql, new HashMap<>());
+        Set<String> propertyNames = new HashSet<>();
+        for (Map<String, Object> map : query.queryResults()) {
+            if(map.get("name") == null || map.get("name").getClass().getName().equals("[Ljava.lang.Void;")){
+                continue;
+            }
+            String[] names = (String[]) map.get("name");
+            propertyNames.addAll(Arrays.asList(names));
+        }
+        return new ArrayList<>(propertyNames);
+    }
+
 
     /**
      * 按条件查询节点
@@ -111,6 +129,7 @@ public class Neo4jUtil {
                 property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperties());
             }
             cypherSql = String.format("match(n%s%s) return n", labels, property);
+            System.out.println(cypherSql);
         }
         Result query = session.query(cypherSql, new HashMap<>());
         ArrayList<Neo4jBasicNode> nodeList = new ArrayList<>();

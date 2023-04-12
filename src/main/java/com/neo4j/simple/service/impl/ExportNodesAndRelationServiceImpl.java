@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 public class ExportNodesAndRelationServiceImpl implements ExportNodesAndRelationService {
 
     @Override
-    public boolean exportNodesAndRelationToExcel() {
-        List<Neo4jBasicRelationReturnVO> data = null;// get data from somewhere
+    public boolean exportNodesAndRelationToExcel(List<Neo4jBasicRelationReturnVO> data) {
+        //todo 应该返回文件流，之后更改
         try {
             Neo4jBasicRelationReturnVOExcelWriter.write(data, "output.xlsx");
         } catch (Exception e) {
@@ -24,8 +24,8 @@ public class ExportNodesAndRelationServiceImpl implements ExportNodesAndRelation
     }
 
     @Override
-    public boolean exportNodesAndRelationToJson() {
-        List<Neo4jBasicRelationReturnVO> data = null;// get data from somewhere
+    public boolean exportNodesAndRelationToJson(List<Neo4jBasicRelationReturnVO> data) {
+        //todo 应该返回文件流，之后更改
         try {
             JsonWriter.writeToJson(data, "output.json");
         } catch (Exception e) {
