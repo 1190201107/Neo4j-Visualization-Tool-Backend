@@ -56,7 +56,7 @@ public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
         temp.put("relationships", neo4jQueryRelationS);
         HashMap<String, Map> graph = new HashMap<>();
         graph.put("graph", temp);
-        return graph;
+        return CommonFunction.getResultMapLabelAndTypeCount(graph);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
         temp.put("relationships", relationsList);
         HashMap<String, Map> graph = new HashMap<>();
         graph.put("graph", temp);
-        return graph;
+        return CommonFunction.getResultMapLabelAndTypeCount(graph);
     }
 
 }

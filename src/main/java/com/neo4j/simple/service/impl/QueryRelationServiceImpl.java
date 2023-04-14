@@ -55,6 +55,7 @@ public class QueryRelationServiceImpl implements QueryRelationService {
 
         //用于去重
         List<Long> nodeIdList = new ArrayList<>();
+        List<Long> relationIdList = new ArrayList<>();
 
         Iterable<Map<String, Object>> maps = query.queryResults();
         for (Map<String, Object> map : maps) {
@@ -95,8 +96,8 @@ public class QueryRelationServiceImpl implements QueryRelationService {
             }
             //get relation
             RelationshipModel queryRelation = (RelationshipModel) map.get("r");
-            if(!nodeIdList.contains(queryRelation.getId())) {
-                nodeIdList.add(queryRelation.getId());
+            if(!relationIdList.contains(queryRelation.getId())) {
+                relationIdList.add(queryRelation.getId());
                 Neo4jQueryRelation neo4jQueryRelation = new Neo4jQueryRelation();
                 neo4jQueryRelation.setId(queryRelation.getId());
                 neo4jQueryRelation.setStartNode(queryRelation.getStartNode());
@@ -121,7 +122,14 @@ public class QueryRelationServiceImpl implements QueryRelationService {
         temp.put("relationships", relationsList);
         HashMap<String, Map> graph = new HashMap<>();
         graph.put("graph", temp);
-        return graph;
+        return CommonFunction.getResultMapLabelAndTypeCount(graph);
+    }
+
+    @Override
+    public HashMap<String, Map> searchGraphByRelationType(String type) {
+        Neo4jQueryRelation neo4jQueryRelation = new Neo4jQueryRelation();
+        neo4jQueryRelation.setType(type);
+        return searchGraphByRelation(neo4jQueryRelation);
     }
 
 }

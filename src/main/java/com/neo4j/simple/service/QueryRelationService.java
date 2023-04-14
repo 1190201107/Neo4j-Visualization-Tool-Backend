@@ -13,4 +13,6 @@ public interface QueryRelationService {
     public List<Neo4jQueryRelation> queryRelationRelationships(RelationDTO relationDTO);
 
     public HashMap<String, Map> searchGraphByRelation(Neo4jQueryRelation Neo4jQueryRelation);
+
+    public HashMap<String, Map> searchGraphByRelationType(String type);
 }
