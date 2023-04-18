@@ -108,6 +108,26 @@ public class Neo4jUtil {
         return new ArrayList<>(propertyNames);
     }
 
+    /**
+     * 给定property名称，查找该property的所有属性值
+     *
+     * @return 返回关系属性值
+     */
+    public <T> List<T> getAllNodePropertyValue(String propertyName) {
+        String cypherSql = "MATCH (n) WHERE EXISTS(n." + propertyName +") RETURN DISTINCT n." + propertyName +" as value";
+        Result query = session.query(cypherSql, new HashMap<>());
+        Set<T> propertyValues = new HashSet<>();
+        for (Map<String, Object> map : query.queryResults()) {
+            if(map.get("value") == null || map.get("value").getClass().getName().equals("[Ljava.lang.Void;")){
+                continue;
+            }
+
+            propertyValues.add((T)map.get("value"));
+        }
+        return new ArrayList<>(propertyValues);
+    }
+
+
 
     /**
      * 按条件查询节点

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,6 +62,15 @@ public class SearchNodesController {
     @GetMapping("/searchDataByProperty")
     public CommonResult<HashMap<String, Map>> searchDataByProperty(@RequestParam("property") String property){
         return new CommonResult<HashMap<String, Map>>().success().data(searchDataByConditionService.searchDataByProperty(property));
+    }
+
+    /**
+     * 根据label和properties查询满足条件的节点
+     * @return 节点列表
+     */
+    @PostMapping("/searchDataByLabelsAndProperties")
+    public <T> CommonResult<HashMap<String, Map>> searchDataByLabelsAndProperties(@RequestBody Map<String, List<T>> labelsAndProperties){
+        return new CommonResult<HashMap<String, Map>>().success().data(searchDataByConditionService.searchDataByLabelsAndProperties(labelsAndProperties));
     }
 
 }
