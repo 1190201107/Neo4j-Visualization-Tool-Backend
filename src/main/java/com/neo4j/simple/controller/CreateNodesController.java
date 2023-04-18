@@ -34,9 +34,10 @@ public class CreateNodesController {
         if(createNodesService.createNodeNoRepeat(neo4jBasicNode)){
             return new CommonResult().success();
         }else{
-            return new CommonResult().fail();
+            return new CommonResult().fail().data("节点已存在");
         }
     }
+
 
     @PostMapping("/recreateNodeNoRepeat")
     public CommonResult recreateNodeNoRepeat(@RequestBody Neo4jBasicNode neo4jBasicNode){

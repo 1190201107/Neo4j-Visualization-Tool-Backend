@@ -5,6 +5,7 @@ import com.neo4j.simple.entity.Neo4jBasicNode;
 import com.neo4j.simple.service.DeleteNodesService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
  * @e-mail 2821626468@qq.com
  * @create 2023-03-05 15:16
  */
+@RestController
 public class DeleteNodesController {
     @Resource
     private DeleteNodesService deleteNodesService;
@@ -22,7 +24,7 @@ public class DeleteNodesController {
      * @param neo4jBasicNode
      *        {
      *            id: 1,
-     *            label: {
+     *            labels: {
      *                "Person",
      *                "Actor"
      *            },

@@ -28,6 +28,11 @@ public class CreateNodesServiceImpl implements CreateNodesService {
         return neo4jUtil.createNode(neo4jBasicNode);
     }
 
+    /**
+     * 创建节点(去重,如果存在则不创建)
+     * @param neo4jBasicNode
+     * @return 是否创建成功
+     */
     @Override
     public boolean createNodeNoRepeat(Neo4jBasicNode neo4jBasicNode) {
         return neo4jUtil.createNode(neo4jBasicNode, true);
@@ -40,7 +45,7 @@ public class CreateNodesServiceImpl implements CreateNodesService {
      */
     @Override
     public boolean recreateNodeNoRepeat(Neo4jBasicNode neo4jBasicNode) {
-        return neo4jUtil.recreateNode(neo4jBasicNode);
+        return neo4jUtil.updateNode(neo4jBasicNode);
     }
     /**
      * 批量创建节点(不去重)

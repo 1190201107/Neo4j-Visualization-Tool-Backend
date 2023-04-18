@@ -53,6 +53,7 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
 
         //用于去重
         List<Long> nodeIdList = new ArrayList<>();
+        List<Long> relationIdList = new ArrayList<>();
 
         Iterable<Map<String, Object>> maps = query.queryResults();
         for (Map<String, Object> map : maps) {
@@ -93,21 +94,23 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
             }
             //get relation
             RelationshipModel queryRelation = (RelationshipModel) map.get("r");
-            Neo4jQueryRelation neo4jQueryRelation = new Neo4jQueryRelation();
-            neo4jQueryRelation.setId(queryRelation.getId());
-            neo4jQueryRelation.setStartNode(queryRelation.getStartNode());
-            neo4jQueryRelation.setEndNode(queryRelation.getEndNode());
-            neo4jQueryRelation.setType(queryRelation.getType());
-            List<Property<String, Object>> propertyList2 = queryRelation.getPropertyList();
-            HashMap<String, Object> tranMap = new HashMap<>();
-            for (Property<String, Object> stringObjectProperty : propertyList2) {
-                if (tranMap.containsKey(stringObjectProperty.getKey())) {
-                    throw new RuntimeException("数据重复");
+            if(!relationIdList.contains(queryRelation.getId())){
+                Neo4jQueryRelation neo4jQueryRelation = new Neo4jQueryRelation();
+                neo4jQueryRelation.setId(queryRelation.getId());
+                neo4jQueryRelation.setStartNode(queryRelation.getStartNode());
+                neo4jQueryRelation.setEndNode(queryRelation.getEndNode());
+                neo4jQueryRelation.setType(queryRelation.getType());
+                List<Property<String, Object>> propertyList2 = queryRelation.getPropertyList();
+                HashMap<String, Object> tranMap = new HashMap<>();
+                for (Property<String, Object> stringObjectProperty : propertyList2) {
+                    if (tranMap.containsKey(stringObjectProperty.getKey())) {
+                        throw new RuntimeException("数据重复");
+                    }
+                    tranMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
                 }
-                tranMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
+                neo4jQueryRelation.setProperties(tranMap);
+                relationsList.add(neo4jQueryRelation);
             }
-            neo4jQueryRelation.setProperties(tranMap);
-            relationsList.add(neo4jQueryRelation);
         }
 
         HashMap<String, List> temp = new HashMap<>();
