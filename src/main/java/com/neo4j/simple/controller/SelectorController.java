@@ -60,7 +60,7 @@ public class SelectorController {
      */
     @GetMapping("/getAllGraph")
     public CommonResult<HashMap<String, Map>> getAllGraph(){
-        return new CommonResult<HashMap<String, Map>>().success().data(selectNeo4jNodeService.selectAllGraph());
+        return new CommonResult<HashMap<String, Map>>().success().data(selectNeo4jNodeService.selectAllGraph(true));
     }
 
 

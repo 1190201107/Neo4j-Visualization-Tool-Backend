@@ -70,7 +70,7 @@ public class SearchNodesController {
      */
     @PostMapping("/searchDataByLabelsAndProperties")
     public <T> CommonResult<HashMap<String, Map>> searchDataByLabelsAndProperties(@RequestBody Map<String, List<T>> labelsAndProperties){
-        return new CommonResult<HashMap<String, Map>>().success().data(searchDataByConditionService.searchDataByLabelsAndProperties(labelsAndProperties));
+        return new CommonResult<HashMap<String, Map>>().success().data(searchDataByConditionService.searchDataByLabelsAndProperties(labelsAndProperties, true));
     }
 
 }

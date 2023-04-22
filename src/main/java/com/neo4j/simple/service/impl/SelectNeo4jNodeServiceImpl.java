@@ -62,7 +62,7 @@ public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
 
 
     @Override
-    public HashMap<String, Map> selectAllGraph() {
+    public HashMap<String, Map> selectAllGraph(boolean needCount) {
         Neo4jBasicNode neo4jBasicNode = new Neo4jBasicNode();
         List<Neo4jBasicNode> neo4jBasicNodes = neo4jUtil.queryNode(neo4jBasicNode);
         RelationDTO relationDTO = new RelationDTO();
@@ -72,7 +72,9 @@ public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
         temp.put("relationships", neo4jQueryRelationS);
         HashMap<String, Map> graph = new HashMap<>();
         graph.put("graph", temp);
-        return CommonFunction.getResultMapLabelAndTypeCount(graph);
+        if(needCount)
+            return CommonFunction.getResultMapLabelAndTypeCount(graph);
+        return graph;
     }
 
     @Override

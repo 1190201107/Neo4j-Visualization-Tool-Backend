@@ -9,6 +9,6 @@ public interface SearchDataByConditionService {
 
     public HashMap<String, Map> searchDataByProperty(String property);
 
-    public <T> HashMap<String, Map> searchDataByLabelsAndProperties(Map<String, List<T>> labelsAndProperties);
+    public <T> HashMap<String, Map> searchDataByLabelsAndProperties(Map<String, List<T>> labelsAndProperties, boolean needCount);
 
 }

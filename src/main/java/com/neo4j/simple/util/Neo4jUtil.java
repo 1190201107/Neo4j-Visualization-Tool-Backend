@@ -220,9 +220,10 @@ public class Neo4jUtil {
      * @return
      */
     public boolean updateNode(Neo4jBasicNode node){
+        System.out.println("updateNode" + node.toString());
+        String addLabelCypherSql = "";
         List<String> saveLabels = node.getLabels();
-        Map<String, Object> saveProperty = node.getProperties();
-        Set<String> savePropertyKeySet = saveProperty.keySet();
+
         //新增标签
         List<String> addLabels = new ArrayList<>();
         for (String saveLabel : saveLabels) {
@@ -249,40 +250,51 @@ public class Neo4jUtil {
         String removeLabelStr = removeLabels.isEmpty()?"":("e:"+String.join(":",removeLabels));
         removeLabelStr = removeLabels.isEmpty()? "": "remove "+removeLabelStr;
 
-        //新增属性
-        HashMap<String, Object> addPropertyMap = new HashMap<>();
-        for (String savePropertyKey: savePropertyKeySet) {
-            addPropertyMap.put(savePropertyKey,saveProperty.get(savePropertyKey));
-        }
-        String addPropertyStr="";
-        if(addLabels.isEmpty()){
-            addPropertyStr = addPropertyMap.isEmpty()?"":("e="+ Neo4jUtil.propertiesMapToPropertiesStr(addPropertyMap));
-        }else{
-            addPropertyStr = addPropertyMap.isEmpty()?"":(",e="+ Neo4jUtil.propertiesMapToPropertiesStr(addPropertyMap));
-        }
 
-        //移除多余的属性
-        Map<String, Object> queryProperty = queryNodeVo.getProperties();
-        Set<String> queryPropertyKeySet = queryProperty.keySet();
-        List<String> removeProperty = new ArrayList<>();
-        for (String queryPropertyKey : queryPropertyKeySet) {
-            if(!savePropertyKeySet.contains(queryPropertyKey)){
-                removeProperty.add(queryPropertyKey);
+
+        if(!(node.getProperties() == null || node.getProperties().isEmpty())){
+            Map<String, Object> saveProperty = node.getProperties();
+            Set<String> savePropertyKeySet = saveProperty.keySet();
+
+            //新增属性
+            HashMap<String, Object> addPropertyMap = new HashMap<>();
+            for (String savePropertyKey: savePropertyKeySet) {
+                addPropertyMap.put(savePropertyKey,saveProperty.get(savePropertyKey));
             }
-        }
-        //将removeProperty中的值转化为 e.removePropertyKey e.removePropertyKey2的形式
-        String removePropertyStr = removeProperty.isEmpty()?"":("e."+String.join(",e.",removeProperty));
-        if(removeLabels.isEmpty() && !removeProperty.isEmpty()){
-            removePropertyStr = "remove "+removePropertyStr;
-        }
-        if(!removeProperty.isEmpty() && !removeLabels.isEmpty()){
-            removeLabelStr = removeLabelStr+",";
+            String addPropertyStr="";
+            if(addLabels.isEmpty()){
+                addPropertyStr = addPropertyMap.isEmpty()?"":("e="+ Neo4jUtil.propertiesMapToPropertiesStr(addPropertyMap));
+            }else{
+                addPropertyStr = addPropertyMap.isEmpty()?"":(",e="+ Neo4jUtil.propertiesMapToPropertiesStr(addPropertyMap));
+            }
+
+            //移除多余的属性
+            Map<String, Object> queryProperty = queryNodeVo.getProperties();
+            Set<String> queryPropertyKeySet = queryProperty.keySet();
+            List<String> removeProperty = new ArrayList<>();
+            for (String queryPropertyKey : queryPropertyKeySet) {
+                if(!savePropertyKeySet.contains(queryPropertyKey)){
+                    removeProperty.add(queryPropertyKey);
+                }
+            }
+            //将removeProperty中的值转化为 e.removePropertyKey e.removePropertyKey2的形式
+            String removePropertyStr = removeProperty.isEmpty()?"":("e."+String.join(",e.",removeProperty));
+            if(removeLabels.isEmpty() && !removeProperty.isEmpty()){
+                removePropertyStr = "remove "+removePropertyStr;
+            }
+            if(!removeProperty.isEmpty() && !removeLabels.isEmpty()){
+                removeLabelStr = removeLabelStr+",";
+            }
+
+            if (StringUtils.isAllEmpty(addLabelStr, addPropertyStr, removeLabelStr, removePropertyStr)) {
+                return true;
+            }
+            addLabelCypherSql =String.format("MERGE (e) with e where id(e)=%s set %s %s %s %s return count(e) as count", node.getId(), addLabelStr, addPropertyStr, removeLabelStr, removePropertyStr);
+        }else{
+            addLabelCypherSql =String.format("MERGE (e) with e where id(e)=%s set %s %s return count(e) as count", node.getId(), addLabelStr, removeLabelStr);
+
         }
 
-        if (StringUtils.isAllEmpty(addLabelStr, addPropertyStr)) {
-            return true;
-        }
-        String addLabelCypherSql =String.format("MERGE (e) with e where id(e)=%s set %s %s %s %s return count(e) as count", node.getId(), addLabelStr, addPropertyStr, removeLabelStr, removePropertyStr);
         System.out.println(addLabelCypherSql);
         Result query = session.query(addLabelCypherSql, new HashMap<>());
         System.out.println("更新了："+node.getId());

@@ -236,7 +236,7 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
      * @return  HashMap<String, Map> 节点和边的集合
      */
     @Override
-    public <T> HashMap<String, Map> searchDataByLabelsAndProperties(Map<String, List<T>> labelsAndProperties) {
+    public <T> HashMap<String, Map> searchDataByLabelsAndProperties(Map<String, List<T>> labelsAndProperties, boolean needCount) {
         String cypherSql = "";
         List<T> labels = labelsAndProperties.get("labels");
         List<T> properties = labelsAndProperties.get("properties");
@@ -359,6 +359,9 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
         temp.put("relationships", relationsList);
         HashMap<String, Map> graph = new HashMap<>();
         graph.put("graph", temp);
-        return CommonFunction.getResultMapLabelAndTypeCount(graph);
+        if(needCount){
+            return CommonFunction.getResultMapLabelAndTypeCount(graph);
+        }
+        return graph;
     }
 }
