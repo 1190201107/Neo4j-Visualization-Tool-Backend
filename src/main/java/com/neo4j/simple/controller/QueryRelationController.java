@@ -5,9 +5,7 @@ import com.neo4j.simple.VO.RelationDTO;
 import com.neo4j.simple.entity.CommonResult;
 import com.neo4j.simple.entity.Neo4jQueryRelation;
 import com.neo4j.simple.service.QueryRelationService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -45,5 +43,10 @@ public class QueryRelationController {
     @PostMapping("/searchGraphByRelation")
     public CommonResult<HashMap<String, Map>> searchGraphByRelation(@RequestBody Neo4jQueryRelation Neo4jQueryRelation){
         return new CommonResult<HashMap<String, Map>>().success().data(queryRelationService.searchGraphByRelation(Neo4jQueryRelation));
+    }
+
+    @GetMapping("/searchGraphByRelationType")
+    public CommonResult<HashMap<String, Map>> searchGraphByRelationType(@RequestParam("type") String type){
+        return new CommonResult<HashMap<String, Map>>().success().data(queryRelationService.searchGraphByRelationType(type));
     }
 }

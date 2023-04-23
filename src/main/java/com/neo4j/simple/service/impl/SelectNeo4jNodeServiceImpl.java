@@ -29,6 +29,10 @@ public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
     @Override
     public List<String> selectAllLabels(){
         List<String> allLabelName = neo4jUtil.getAllLabelName();
+        //对allLabelName内的字符串进行去重
+        Set<String> set = new HashSet<>(allLabelName);
+        //将set转换为list
+        allLabelName = new ArrayList<>(set);
         return allLabelName;
     }
 
@@ -44,9 +48,21 @@ public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
         return allPropertiesName;
     }
 
+    //查询neo4j数据库中所有properties中对应的值
+    @Override
+    public <T> Map<String, List<T>> selectAllPropertiesValue() {
+        List<String> allPropertiesName = neo4jUtil.getAllNodeProperty();
+        Map<String, List<T>> allPropertiesValue = new HashMap<>();
+        for (String propertyName : allPropertiesName) {
+            List<T> propertyValue = neo4jUtil.getAllNodePropertyValue(propertyName);
+            allPropertiesValue.put(propertyName, propertyValue);
+        }
+        return allPropertiesValue;
+    }
+
 
     @Override
-    public HashMap<String, Map> selectAllGraph() {
+    public HashMap<String, Map> selectAllGraph(boolean needCount) {
         Neo4jBasicNode neo4jBasicNode = new Neo4jBasicNode();
         List<Neo4jBasicNode> neo4jBasicNodes = neo4jUtil.queryNode(neo4jBasicNode);
         RelationDTO relationDTO = new RelationDTO();
@@ -56,6 +72,8 @@ public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
         temp.put("relationships", neo4jQueryRelationS);
         HashMap<String, Map> graph = new HashMap<>();
         graph.put("graph", temp);
+        if(needCount)
+            return CommonFunction.getResultMapLabelAndTypeCount(graph);
         return graph;
     }
 
@@ -145,7 +163,7 @@ public class SelectNeo4jNodeServiceImpl implements SelectNeo4jNodeService {
         temp.put("relationships", relationsList);
         HashMap<String, Map> graph = new HashMap<>();
         graph.put("graph", temp);
-        return graph;
+        return CommonFunction.getResultMapLabelAndTypeCount(graph);
     }
 
 }

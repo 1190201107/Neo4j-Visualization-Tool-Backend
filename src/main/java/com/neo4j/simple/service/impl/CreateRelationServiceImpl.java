@@ -4,6 +4,7 @@ import com.neo4j.simple.VO.Neo4jSaveRelationDTO;
 import com.neo4j.simple.service.CreateRelationService;
 import com.neo4j.simple.util.Neo4jUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -23,6 +24,7 @@ public class CreateRelationServiceImpl implements CreateRelationService {
      * @return 返回创建关系的个数
      */
     @Override
+    @Transactional(transactionManager = "neo4jTransaction")
     public int queryNodeCreateRelation(Neo4jSaveRelationDTO saveRelation) {
         return neo4jUtil.queryNodeCreateRelation(saveRelation);
     }
@@ -34,6 +36,7 @@ public class CreateRelationServiceImpl implements CreateRelationService {
      * @return 是否创建成功
      */
     @Override
+    @Transactional(transactionManager = "neo4jTransaction")
     public boolean createNodeAndRelation(Neo4jSaveRelationDTO saveRelation) {
         return neo4jUtil.createNodeAndRelation(saveRelation);
     }

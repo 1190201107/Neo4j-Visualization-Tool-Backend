@@ -45,12 +45,22 @@ public class SelectorController {
     }
 
     /**
+     * 查询所有properties对应的值
+     * @return Map<属性名，属性值列表>
+     */
+
+    @GetMapping("/getAllPropertiesValue")
+    public CommonResult<Map<String, List<String>>> getAllPropertiesValue(){
+        return new CommonResult<Map<String, List<String>>>().success().data(selectNeo4jNodeService.selectAllPropertiesValue()) ;
+    }
+
+    /**
      * 查询所有节点
      * @return
      */
     @GetMapping("/getAllGraph")
     public CommonResult<HashMap<String, Map>> getAllGraph(){
-        return new CommonResult<HashMap<String, Map>>().success().data(selectNeo4jNodeService.selectAllGraph());
+        return new CommonResult<HashMap<String, Map>>().success().data(selectNeo4jNodeService.selectAllGraph(true));
     }
 
 

@@ -5,6 +5,7 @@ import com.neo4j.simple.entity.Neo4jBasicNode;
 import com.neo4j.simple.service.CreateNodesService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * @e-mail 2821626468@qq.com
  * @create 2023-03-05 15:15
  */
+@RestController
 public class CreateNodesController {
     @Resource
     private CreateNodesService createNodesService;
@@ -32,9 +34,10 @@ public class CreateNodesController {
         if(createNodesService.createNodeNoRepeat(neo4jBasicNode)){
             return new CommonResult().success();
         }else{
-            return new CommonResult().fail();
+            return new CommonResult().fail().data("节点已存在");
         }
     }
+
 
     @PostMapping("/recreateNodeNoRepeat")
     public CommonResult recreateNodeNoRepeat(@RequestBody Neo4jBasicNode neo4jBasicNode){

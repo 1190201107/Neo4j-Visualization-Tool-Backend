@@ -108,6 +108,26 @@ public class Neo4jUtil {
         return new ArrayList<>(propertyNames);
     }
 
+    /**
+     * 给定property名称，查找该property的所有属性值
+     *
+     * @return 返回关系属性值
+     */
+    public <T> List<T> getAllNodePropertyValue(String propertyName) {
+        String cypherSql = "MATCH (n) WHERE EXISTS(n." + propertyName +") RETURN DISTINCT n." + propertyName +" as value";
+        Result query = session.query(cypherSql, new HashMap<>());
+        Set<T> propertyValues = new HashSet<>();
+        for (Map<String, Object> map : query.queryResults()) {
+            if(map.get("value") == null || map.get("value").getClass().getName().equals("[Ljava.lang.Void;")){
+                continue;
+            }
+
+            propertyValues.add((T)map.get("value"));
+        }
+        return new ArrayList<>(propertyValues);
+    }
+
+
 
     /**
      * 按条件查询节点
@@ -172,6 +192,7 @@ public class Neo4jUtil {
             property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperties());
         }
         String cypherSql = String.format("%s(%s%s)", nodup ? "MERGE" : "create", labels, property);
+        System.out.println(cypherSql);
         Result query = session.query(cypherSql, new HashMap<>());
         session.clear();
         return query.queryStatistics().getNodesCreated() > 0;
@@ -190,7 +211,7 @@ public class Neo4jUtil {
     }
 
     /**
-     * 创建节点，（去重增强型）
+     * 更新节点，（去重增强型）
      * 创建节点，如果节点存在，先把它删除，在重新创建
      * 这个方法的目的是因为 createNode方法所谓的去重，
      * 是指如果 ，已有节点A,需要创建的节点B,如果A的属性个数大于B的属性且属性对应的值一模一样，
@@ -198,55 +219,88 @@ public class Neo4jUtil {
      * @param node
      * @return
      */
-    public boolean recreateNode(Neo4jBasicNode node){
+    public boolean updateNode(Neo4jBasicNode node){
+        System.out.println("updateNode" + node.toString());
+        String addLabelCypherSql = "";
         List<String> saveLabels = node.getLabels();
-        Map<String, Object> saveProperty = node.getProperties();
-        Set<String> savePropertyKeySet = saveProperty.keySet();
-        //查询用属性查询节点是不是存在。
-        //存在比较标签的lable1是不是一样。不一样就这个查询到的节点（少了就新增标签，多了就删除标签）
-        Neo4jBasicNode queryNode= new Neo4jBasicNode();
-        BeanUtils.copyProperties(node, queryNode);
-        queryNode.setLabels(null);
-        List<Neo4jBasicNode> queryNodeList = this.queryNode(queryNode);
-        if (queryNodeList.isEmpty()){
-            return createNode(node,true);
+
+        //新增标签
+        List<String> addLabels = new ArrayList<>();
+        for (String saveLabel : saveLabels) {
+            addLabels.add(saveLabel);
         }
+        String addLabelStr = addLabels.isEmpty()?"":("e:"+String.join(":",addLabels));
 
-        for (Neo4jBasicNode neo4jBasicNode : queryNodeList) {
-            //处理标签
-            List<String> queryLabels = neo4jBasicNode.getLabels();
-            ArrayList<String> addLabels = new ArrayList<>();
-            for (String saveLabel : saveLabels) {
-                if (!queryLabels.contains(saveLabel)){
-                    //新增标签
-                    addLabels.add(saveLabel);
-                }
+        //移除多余的标签
+        Neo4jBasicNode queryNode = new Neo4jBasicNode();
+        queryNode.setId(node.getId());
+        List<Neo4jBasicNode> queryNodeList = this.queryNode(queryNode);
+        if(queryNodeList.isEmpty()){
+            return this.createNode(node);
+        }
+        Neo4jBasicNode queryNodeVo = queryNodeList.get(0);
+        List<String> queryLabels = queryNodeVo.getLabels();
+        //找出queryLabels中node中没有的标签
+        List<String> removeLabels = new ArrayList<>();
+        for (String queryLabel : queryLabels) {
+            if(!saveLabels.contains(queryLabel)){
+                removeLabels.add(queryLabel);
             }
-            String addLabelStr=addLabels.isEmpty()?"":("e:"+String.join(":",addLabels));
-
-            //处理属性
-            Map<String, Object> queryProperty = neo4jBasicNode.getProperties();
-            Set<String> queryPropertyKeySet = queryProperty.keySet();
+        }
+        String removeLabelStr = removeLabels.isEmpty()?"":("e:"+String.join(":",removeLabels));
+        removeLabelStr = removeLabels.isEmpty()? "": "remove "+removeLabelStr;
 
 
+
+        if(!(node.getProperties() == null || node.getProperties().isEmpty())){
+            Map<String, Object> saveProperty = node.getProperties();
+            Set<String> savePropertyKeySet = saveProperty.keySet();
+
+            //新增属性
             HashMap<String, Object> addPropertyMap = new HashMap<>();
             for (String savePropertyKey: savePropertyKeySet) {
-                if (!queryPropertyKeySet.contains(savePropertyKey)){
-                    addPropertyMap.put(savePropertyKey,saveProperty.get(savePropertyKey));
+                addPropertyMap.put(savePropertyKey,saveProperty.get(savePropertyKey));
+            }
+            String addPropertyStr="";
+            if(addLabels.isEmpty()){
+                addPropertyStr = addPropertyMap.isEmpty()?"":("e="+ Neo4jUtil.propertiesMapToPropertiesStr(addPropertyMap));
+            }else{
+                addPropertyStr = addPropertyMap.isEmpty()?"":(",e="+ Neo4jUtil.propertiesMapToPropertiesStr(addPropertyMap));
+            }
+
+            //移除多余的属性
+            Map<String, Object> queryProperty = queryNodeVo.getProperties();
+            Set<String> queryPropertyKeySet = queryProperty.keySet();
+            List<String> removeProperty = new ArrayList<>();
+            for (String queryPropertyKey : queryPropertyKeySet) {
+                if(!savePropertyKeySet.contains(queryPropertyKey)){
+                    removeProperty.add(queryPropertyKey);
                 }
             }
-            String addPropertyStr=addPropertyMap.isEmpty()?"":(",e+="+ Neo4jUtil.propertiesMapToPropertiesStr(addPropertyMap));
-            if (StringUtils.isAllEmpty(addLabelStr, addPropertyStr)) {
-
-                return true;
+            //将removeProperty中的值转化为 e.removePropertyKey e.removePropertyKey2的形式
+            String removePropertyStr = removeProperty.isEmpty()?"":("e."+String.join(",e.",removeProperty));
+            if(removeLabels.isEmpty() && !removeProperty.isEmpty()){
+                removePropertyStr = "remove "+removePropertyStr;
+            }
+            if(!removeProperty.isEmpty() && !removeLabels.isEmpty()){
+                removeLabelStr = removeLabelStr+",";
             }
 
-            String addLabelCypherSql =String.format("MERGE (e) with e where id(e)=%s set %s %s return count(e) as count",neo4jBasicNode.getId(),addLabelStr,addPropertyStr);
-            Result query = session.query(addLabelCypherSql, new HashMap<>());
-            System.out.println("更新了："+neo4jBasicNode.getId());
+            if (StringUtils.isAllEmpty(addLabelStr, addPropertyStr, removeLabelStr, removePropertyStr)) {
+                return true;
+            }
+            addLabelCypherSql =String.format("MERGE (e) with e where id(e)=%s set %s %s %s %s return count(e) as count", node.getId(), addLabelStr, addPropertyStr, removeLabelStr, removePropertyStr);
+        }else{
+            addLabelCypherSql =String.format("MERGE (e) with e where id(e)=%s set %s %s return count(e) as count", node.getId(), addLabelStr, removeLabelStr);
 
-            session.clear();
         }
+
+        System.out.println(addLabelCypherSql);
+        Result query = session.query(addLabelCypherSql, new HashMap<>());
+        System.out.println("更新了："+node.getId());
+
+        session.clear();
+
         //创建不重复节点
         return true;
     };

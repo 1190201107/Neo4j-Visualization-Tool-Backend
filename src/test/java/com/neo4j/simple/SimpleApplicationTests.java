@@ -20,9 +20,8 @@ class SimpleApplicationTests {
     @Test
     public void neo4jUtilTest(){
         List<String> allLabelName = neo4jUtil.getAllLabelName();
-        Iterator<String> label = allLabelName.iterator();
-        while(label.hasNext()){
-            System.out.println(label.next());
+        for (String s : allLabelName) {
+            System.out.println(s);
         }
 
     }
@@ -34,15 +33,14 @@ class SimpleApplicationTests {
         label.add("lgz");
         Map<String, Object> stringObjectHashMap = new HashMap<>();
         neo4jBasicNode.setLabels(label);
-        neo4jBasicNode.setProperty(stringObjectHashMap);
+        neo4jBasicNode.setProperties(stringObjectHashMap);
         neo4jBasicNode.setId(1L);
 
         neo4jUtil.createNode(neo4jBasicNode);
 
         List<String> allLabelName = neo4jUtil.getAllLabelName();
-        Iterator<String> labels = allLabelName.iterator();
-        while(labels.hasNext()){
-            System.out.println(labels.next());
+        for (String s : allLabelName) {
+            System.out.println(s);
         }
     }
 
