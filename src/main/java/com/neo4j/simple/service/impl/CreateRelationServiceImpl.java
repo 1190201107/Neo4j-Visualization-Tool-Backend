@@ -24,7 +24,7 @@ public class CreateRelationServiceImpl implements CreateRelationService {
      * @return 返回创建关系的个数
      */
     @Override
-    @Transactional(transactionManager = "neo4jTransaction")
+//    @Transactional(transactionManager = "neo4jTransaction")
     public int queryNodeCreateRelation(Neo4jSaveRelationDTO saveRelation) {
         return neo4jUtil.queryNodeCreateRelation(saveRelation);
     }
@@ -36,7 +36,7 @@ public class CreateRelationServiceImpl implements CreateRelationService {
      * @return 是否创建成功
      */
     @Override
-    @Transactional(transactionManager = "neo4jTransaction")
+//    @Transactional(transactionManager = "neo4jTransaction")
     public boolean createNodeAndRelation(Neo4jSaveRelationDTO saveRelation) {
         return neo4jUtil.createNodeAndRelation(saveRelation);
     }

@@ -1,7 +1,7 @@
 package com.neo4j.simple.VO;
 
 import com.neo4j.simple.entity.Neo4jBasicNode;
-import com.neo4j.simple.entity.Neo4jBasicRelation;
+import com.neo4j.simple.entity.Neo4jQueryRelation;
 import lombok.Data;
 
 import java.util.*;
@@ -11,5 +11,5 @@ public class ImportDataVO {
 
     List<Neo4jBasicNode> nodes;
 
-    List<Neo4jBasicRelation> relationships;
+    List<Neo4jQueryRelation> relationships;
 }

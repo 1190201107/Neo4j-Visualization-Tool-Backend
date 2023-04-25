@@ -339,7 +339,7 @@ public class Neo4jUtil {
                     property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperties());
                 }
                 String sql = String.format("(%s%s)", labels, property);
-                //对sql去重，如果有就跳过
+                //对cql去重，如果有就跳过
                 if (distinctList.contains(sql)) {
                     continue;
                 }
@@ -353,7 +353,7 @@ public class Neo4jUtil {
             addNode.addAll(nodeList);
         }
 
-        //sql拼接
+        //cql拼接
         String cypherSql = "create";
         ArrayList<String> content = new ArrayList<>();
         for (Neo4jBasicNode node : addNode) {

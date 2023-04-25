@@ -33,7 +33,7 @@ public class CreateNodesServiceImpl implements CreateNodesService {
      * @return 是否创建成功
      */
     @Override
-    @Transactional(transactionManager = "neo4jTransaction")
+//    @Transactional(transactionManager = "neo4jTransaction")
     public boolean createNode(Neo4jBasicNode neo4jBasicNode) {
         return neo4jUtil.createNode(neo4jBasicNode);
     }
@@ -44,7 +44,7 @@ public class CreateNodesServiceImpl implements CreateNodesService {
      * @return 是否创建成功
      */
     @Override
-    @Transactional(transactionManager = "neo4jTransaction")
+//    @Transactional(transactionManager = "neo4jTransaction")
     public boolean createNodeNoRepeat(Neo4jBasicNode neo4jBasicNode) {
         return neo4jUtil.createNode(neo4jBasicNode, true);
     }
@@ -55,7 +55,7 @@ public class CreateNodesServiceImpl implements CreateNodesService {
      * @return 是否创建成功
      */
     @Override
-    @Transactional(transactionManager = "neo4jTransaction")
+//    @Transactional(transactionManager = "neo4jTransaction")
     public boolean recreateNodeNoRepeat(Neo4jBasicNode neo4jBasicNode) {
         return neo4jUtil.updateNode(neo4jBasicNode);
     }
@@ -65,7 +65,7 @@ public class CreateNodesServiceImpl implements CreateNodesService {
      * @return 创建成功的节点数量
      */
     @Override
-    @Transactional(transactionManager = "neo4jTransaction")
+//    @Transactional(transactionManager = "neo4jTransaction")
     public Long batchCreateNode(List<Neo4jBasicNode> neo4jBasicNodes) {
         return neo4jUtil.batchCreateNode(neo4jBasicNodes);
     }
@@ -76,7 +76,7 @@ public class CreateNodesServiceImpl implements CreateNodesService {
      * @return 创建成功的节点数量
      */
     @Override
-    @Transactional(transactionManager = "neo4jTransaction")
+//    @Transactional(transactionManager = "neo4jTransaction")
     public Long batchCreateNodeNoRepeat(List<Neo4jBasicNode> neo4jBasicNodes) {
         return neo4jUtil.batchCreateNode(neo4jBasicNodes, true);
     }
