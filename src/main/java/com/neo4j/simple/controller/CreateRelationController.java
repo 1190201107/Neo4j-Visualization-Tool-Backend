@@ -1,5 +1,6 @@
 package com.neo4j.simple.controller;
 
+import com.neo4j.simple.VO.DeleteRelationVO;
 import com.neo4j.simple.VO.Neo4jSaveRelationDTO;
 import com.neo4j.simple.entity.CommonResult;
 import com.neo4j.simple.service.CreateRelationService;
@@ -15,16 +16,27 @@ public class CreateRelationController {
     private CreateRelationService createRelationService;
 
     @PostMapping("/queryNodeCreateRelation")
-    public CommonResult queryNodeCreateRelation(@RequestBody Neo4jSaveRelationDTO saveRelation){
-        return new CommonResult().success().data(createRelationService.queryNodeCreateRelation(saveRelation));
+    public CommonResult<Integer> queryNodeCreateRelation(@RequestBody Neo4jSaveRelationDTO saveRelation){
+        return new CommonResult<Integer>().success().data(createRelationService.queryNodeCreateRelation(saveRelation));
     }
 
     @PostMapping("/createNodeAndRelation")
-    public CommonResult createNodeAndRelation(@RequestBody Neo4jSaveRelationDTO saveRelation){
+    public CommonResult<Boolean> createNodeAndRelation(@RequestBody Neo4jSaveRelationDTO saveRelation){
         if(createRelationService.createNodeAndRelation(saveRelation)){
-            return new CommonResult().success();
+            return new CommonResult<Boolean>().success();
         }else{
-            return new CommonResult().fail();
+            return new CommonResult<Boolean>().fail();
+        }
+    }
+    /**
+     * 删除两点之间的关系
+     */
+    @PostMapping("/deleteRelation")
+    public CommonResult<Boolean> deleteRelation(@RequestBody DeleteRelationVO deleteRelationVO){
+        if(createRelationService.deleteRelation(deleteRelationVO)){
+            return new CommonResult<Boolean>().success();
+        }else{
+            return new CommonResult<Boolean>().fail();
         }
     }
 }

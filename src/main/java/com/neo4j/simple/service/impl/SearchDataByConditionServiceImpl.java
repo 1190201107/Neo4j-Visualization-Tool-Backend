@@ -44,7 +44,7 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
 //            property = Neo4jUtil.propertiesMapToPropertiesStr(node.getProperties());
 //        }
 //        cypherSql = String.format("match(n%s%s) return n", labels, property);
-        cypherSql = String.format("match(n%s)-[r]-(m) return n, r, m", labels);
+        cypherSql = String.format("match(n%s)-[r]-(m) match(l%s) return n, r, m, l", labels, labels);
         System.out.println(cypherSql);
 
         Result query = session.query(cypherSql, new HashMap<>());
@@ -92,9 +92,27 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
                 endNodeVo.setProperties(proMap);
                 nodeList.add(endNodeVo);
             }
+            NodeModel queryNode3 = (NodeModel) map.get("l");
+            if(!nodeIdList.contains(queryNode3.getId())){
+                nodeIdList.add(queryNode3.getId());
+                Neo4jBasicNode startNodeVo = new Neo4jBasicNode();
+                startNodeVo.setId(queryNode3.getId());
+                startNodeVo.setLabels(Arrays.asList(queryNode3.getLabels()));
+                List<Property<String, Object>> propertyList = queryNode3.getPropertyList();
+                HashMap<String, Object> proMap = new HashMap<>();
+                for (Property<String, Object> stringObjectProperty : propertyList) {
+                    if (proMap.containsKey(stringObjectProperty.getKey())) {
+                        throw new RuntimeException("数据重复");
+                    }
+                    proMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
+                }
+                startNodeVo.setProperties(proMap);
+                nodeList.add(startNodeVo);
+            }
             //get relation
             RelationshipModel queryRelation = (RelationshipModel) map.get("r");
             if(!relationIdList.contains(queryRelation.getId())){
+                relationIdList.add(queryRelation.getId());
                 Neo4jQueryRelation neo4jQueryRelation = new Neo4jQueryRelation();
                 neo4jQueryRelation.setId(queryRelation.getId());
                 neo4jQueryRelation.setStartNode(queryRelation.getStartNode());

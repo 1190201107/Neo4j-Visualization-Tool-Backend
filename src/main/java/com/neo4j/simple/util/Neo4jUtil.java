@@ -490,6 +490,7 @@ public class Neo4jUtil {
             relationProperty = Neo4jUtil.propertiesMapToPropertiesStr(saveRelation.getRelationship().getProperties());
         }
         cypherSql = String.format("MATCH (start%s%s) %s with start MATCH (end%s%s) %s MERGE (start)-[rep%s%s]->(end)", startLabel, startProperty, startWhere, endLabel, endProperty, endWhere, relationType, relationProperty);
+        System.out.println(cypherSql);
         Result query = session.query(cypherSql, new HashMap<>());
         session.clear();
         return query.queryStatistics().getRelationshipsCreated();
