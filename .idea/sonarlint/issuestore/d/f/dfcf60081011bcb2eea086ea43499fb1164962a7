@@ -1,8 +1,9 @@
 
-]	java:S125"<This block of commented-out lines of code should be removed.(ˆëŞ°şÿÿÿÿ8şÌ•¥Ú0
-k
-java:S1128"NRemove this unused import 'org.neo4j.ogm.config.ClasspathConfigurationSource'.(ş–Ñ©8“ë˜¥Ú0
-b
-java:S1128"ERemove this unused import 'org.neo4j.ogm.config.ConfigurationSource'.(ì€‘8”ë˜¥Ú0
-‚
-java:S1488"eImmediately return this expression instead of assigning it to the temporary variable "configuration".(´Ğğ8‡ßŸ¥Ú0
+]	java:S125"<This block of commented-out lines of code should be removed.(òÏ†Ãûÿÿÿÿ8½ø€¹ı0
+X	java:S125	"<This block of commented-out lines of code should be removed.(×—ˆ‚8¾ø€¹ı0
+X	java:S125"<This block of commented-out lines of code should be removed.(ªè–Ç8Ñø€¹ı0
+X	java:S125"<This block of commented-out lines of code should be removed.(¢ËË¦8Òø€¹ı0
+Z	java:S106*"9Replace this use of System.out or System.err by a logger.(´Ù°²ıÿÿÿÿ8Üø€¹ı0
+]	java:S125("<This block of commented-out lines of code should be removed.(³è£›şÿÿÿÿ8İø€¹ı0
+T	java:S106+"9Replace this use of System.out or System.err by a logger.(õ—û#8ßø€¹ı0
+U	java:S106,"9Replace this use of System.out or System.err by a logger.(†à¯‡8áø€¹ı0

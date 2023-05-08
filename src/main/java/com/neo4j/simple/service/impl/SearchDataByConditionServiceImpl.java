@@ -147,8 +147,8 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
     public HashMap<String, Map> searchDataByProperty(String property) {
 
         String cypherSql = "";
-        String properties = ":`" + String.join("`:`", property + "`");
-        cypherSql = String.format("MATCH (m)-[r%s]->(n) RETURN m, r, n", properties);
+        String properties = "`" + property + "`";
+        cypherSql = String.format("MATCH (n) WHERE EXISTS(n.%s) MATCH (n)-[r]->(m)  MATCH (k) WHERE EXISTS(k.%s) RETURN m, r, n, k", properties, properties);
         System.out.println(cypherSql);
 
         Result query = session.query(cypherSql, new HashMap<>());
@@ -157,6 +157,7 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
 
         //用于去重
         List<Long> nodeIdList = new ArrayList<>();
+        List<Long> relationIdList = new ArrayList<>();
 
         Iterable<Map<String, Object>> maps = query.queryResults();
         for (Map<String, Object> map : maps) {
@@ -195,23 +196,145 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
                 endNodeVo.setProperties(proMap);
                 nodeList.add(endNodeVo);
             }
+            NodeModel queryNode3 = (NodeModel) map.get("k");
+            if(!nodeIdList.contains(queryNode3.getId())){
+                nodeIdList.add(queryNode3.getId());
+                Neo4jBasicNode startNodeVo = new Neo4jBasicNode();
+                startNodeVo.setId(queryNode3.getId());
+                startNodeVo.setLabels(Arrays.asList(queryNode3.getLabels()));
+                List<Property<String, Object>> propertyList = queryNode3.getPropertyList();
+                HashMap<String, Object> proMap = new HashMap<>();
+                for (Property<String, Object> stringObjectProperty : propertyList) {
+                    if (proMap.containsKey(stringObjectProperty.getKey())) {
+                        throw new RuntimeException("数据重复");
+                    }
+                    proMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
+                }
+                startNodeVo.setProperties(proMap);
+                nodeList.add(startNodeVo);
+            }
             //get relation
             RelationshipModel queryRelation = (RelationshipModel) map.get("r");
-            Neo4jQueryRelation neo4jQueryRelation = new Neo4jQueryRelation();
-            neo4jQueryRelation.setId(queryRelation.getId());
-            neo4jQueryRelation.setStartNode(queryRelation.getStartNode());
-            neo4jQueryRelation.setEndNode(queryRelation.getEndNode());
-            neo4jQueryRelation.setType(queryRelation.getType());
-            List<Property<String, Object>> propertyList2 = queryRelation.getPropertyList();
-            HashMap<String, Object> tranMap = new HashMap<>();
-            for (Property<String, Object> stringObjectProperty : propertyList2) {
-                if (tranMap.containsKey(stringObjectProperty.getKey())) {
-                    throw new RuntimeException("数据重复");
+            if(!relationIdList.contains(queryRelation.getId())){
+                relationIdList.add(queryRelation.getId());
+                Neo4jQueryRelation neo4jQueryRelation = new Neo4jQueryRelation();
+                neo4jQueryRelation.setId(queryRelation.getId());
+                neo4jQueryRelation.setStartNode(queryRelation.getStartNode());
+                neo4jQueryRelation.setEndNode(queryRelation.getEndNode());
+                neo4jQueryRelation.setType(queryRelation.getType());
+                List<Property<String, Object>> propertyList2 = queryRelation.getPropertyList();
+                HashMap<String, Object> tranMap = new HashMap<>();
+                for (Property<String, Object> stringObjectProperty : propertyList2) {
+                    if (tranMap.containsKey(stringObjectProperty.getKey())) {
+                        throw new RuntimeException("数据重复");
+                    }
+                    tranMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
                 }
-                tranMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
+                neo4jQueryRelation.setProperties(tranMap);
+                relationsList.add(neo4jQueryRelation);
             }
-            neo4jQueryRelation.setProperties(tranMap);
-            relationsList.add(neo4jQueryRelation);
+        }
+        cypherSql = String.format("MATCH (n) WHERE EXISTS(n.%s) MATCH (j)-[s]->(n) MATCH (k) WHERE EXISTS(k.%s) RETURN n, k, j, s", properties, properties);
+        System.out.println(cypherSql);
+        Result query2 = session.query(cypherSql, new HashMap<>());
+        Iterable<Map<String, Object>> maps2 = query2.queryResults();
+        for (Map<String, Object> map : maps2) {
+            //get node
+            NodeModel queryNode = (NodeModel) map.get("n");
+            if(!nodeIdList.contains(queryNode.getId())){
+                nodeIdList.add(queryNode.getId());
+                Neo4jBasicNode startNodeVo = new Neo4jBasicNode();
+                startNodeVo.setId(queryNode.getId());
+                startNodeVo.setLabels(Arrays.asList(queryNode.getLabels()));
+                List<Property<String, Object>> propertyList = queryNode.getPropertyList();
+                HashMap<String, Object> proMap = new HashMap<>();
+                for (Property<String, Object> stringObjectProperty : propertyList) {
+                    if (proMap.containsKey(stringObjectProperty.getKey())) {
+                        throw new RuntimeException("数据重复");
+                    }
+                    proMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
+                }
+                startNodeVo.setProperties(proMap);
+                nodeList.add(startNodeVo);
+            }
+            NodeModel queryNode3 = (NodeModel) map.get("k");
+            if(!nodeIdList.contains(queryNode3.getId())){
+                nodeIdList.add(queryNode3.getId());
+                Neo4jBasicNode startNodeVo = new Neo4jBasicNode();
+                startNodeVo.setId(queryNode3.getId());
+                startNodeVo.setLabels(Arrays.asList(queryNode3.getLabels()));
+                List<Property<String, Object>> propertyList = queryNode3.getPropertyList();
+                HashMap<String, Object> proMap = new HashMap<>();
+                for (Property<String, Object> stringObjectProperty : propertyList) {
+                    if (proMap.containsKey(stringObjectProperty.getKey())) {
+                        throw new RuntimeException("数据重复");
+                    }
+                    proMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
+                }
+                startNodeVo.setProperties(proMap);
+                nodeList.add(startNodeVo);
+            }
+            NodeModel queryNode4 = (NodeModel) map.get("j");
+            if(!nodeIdList.contains(queryNode4.getId())){
+                nodeIdList.add(queryNode4.getId());
+                Neo4jBasicNode endNodeVo = new Neo4jBasicNode();
+                endNodeVo.setId(queryNode4.getId());
+                endNodeVo.setLabels(Arrays.asList(queryNode4.getLabels()));
+                List<Property<String, Object>> propertyList = queryNode4.getPropertyList();
+                HashMap<String, Object> proMap = new HashMap<>();
+                for (Property<String, Object> stringObjectProperty : propertyList) {
+                    if (proMap.containsKey(stringObjectProperty.getKey())) {
+                        throw new RuntimeException("数据重复");
+                    }
+                    proMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
+                }
+                endNodeVo.setProperties(proMap);
+                nodeList.add(endNodeVo);
+            }
+            //get relation
+            RelationshipModel queryRelation2 = (RelationshipModel) map.get("s");
+            if(!relationIdList.contains(queryRelation2.getId())){
+                relationIdList.add(queryRelation2.getId());
+                Neo4jQueryRelation neo4jQueryRelation = new Neo4jQueryRelation();
+                neo4jQueryRelation.setId(queryRelation2.getId());
+                neo4jQueryRelation.setStartNode(queryRelation2.getStartNode());
+                neo4jQueryRelation.setEndNode(queryRelation2.getEndNode());
+                neo4jQueryRelation.setType(queryRelation2.getType());
+                List<Property<String, Object>> propertyList2 = queryRelation2.getPropertyList();
+                HashMap<String, Object> tranMap = new HashMap<>();
+                for (Property<String, Object> stringObjectProperty : propertyList2) {
+                    if (tranMap.containsKey(stringObjectProperty.getKey())) {
+                        throw new RuntimeException("数据重复");
+                    }
+                    tranMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
+                }
+                neo4jQueryRelation.setProperties(tranMap);
+                relationsList.add(neo4jQueryRelation);
+            }
+        }
+
+        if(nodeList.size() == 0 && relationsList.size() == 0){
+            cypherSql = String.format("MATCH (n) WHERE EXISTS(n.%s) RETURN n", properties);
+            System.out.println(cypherSql);
+            Result query3 = session.query(cypherSql, new HashMap<>());
+            Iterable<Map<String, Object>> maps3 = query3.queryResults();
+            for (Map<String, Object> map : maps3) {
+                //get node
+                NodeModel queryNode = (NodeModel) map.get("n");
+                Neo4jBasicNode startNodeVo = new Neo4jBasicNode();
+                startNodeVo.setId(queryNode.getId());
+                startNodeVo.setLabels(Arrays.asList(queryNode.getLabels()));
+                List<Property<String, Object>> propertyList = queryNode.getPropertyList();
+                HashMap<String, Object> proMap = new HashMap<>();
+                for (Property<String, Object> stringObjectProperty : propertyList) {
+                    if (proMap.containsKey(stringObjectProperty.getKey())) {
+                        throw new RuntimeException("数据重复");
+                    }
+                    proMap.put(stringObjectProperty.getKey(), stringObjectProperty.getValue());
+                }
+                startNodeVo.setProperties(proMap);
+                nodeList.add(startNodeVo);
+            }
         }
 
         HashMap<String, List> temp = new HashMap<>();
@@ -278,7 +401,7 @@ public class SearchDataByConditionServiceImpl implements SearchDataByConditionSe
                     if (propertyList.size() == 1) {
                         propertiesStr += String.format("n.%s IS NOT NULL OR ", propertyList.get(0));
                     } else if (propertyList.size() == 2) {
-                        propertiesStr += String.format("n.%s IN [%s] OR ", propertyList.get(0), propertyList.get(1));
+                        propertiesStr += String.format("n.%s IN [\"%s\"] OR ", propertyList.get(0), propertyList.get(1));
                     }
                 }
             }

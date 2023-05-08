@@ -31,41 +31,10 @@ import java.util.*;
 @RestController
 public class ModifyDatabaseConfigController {
 
-//    @Resource
-//    Neo4jConfig neo4jConfig;
-//
-//    private final ConfigurableApplicationContext context;
-//
-//    public ModifyDatabaseConfigController(ConfigurableApplicationContext context) {
-//        this.context = context;
-//    }
-//
-//    @Resource
-//    DatabaseConfig databaseConfig;
 
     @PostMapping("/neo4j-config")
     public CommonResult<String> updateNeo4jConfig(@RequestParam("uri") String uri, @RequestBody UserMessage userMessage) throws SQLException {
 
-//        ConfigurableEnvironment env = context.getEnvironment();
-//        Map<String, Object> properties = new HashMap<>();
-//        properties.put("spring.data.neo4j.uri", uri);
-//        properties.put("spring.data.neo4j.username", userMessage.username);
-//        properties.put("spring.data.neo4j.password", userMessage.password);
-//
-//        MapPropertySource propertySource = new MapPropertySource("my-property-source", properties);
-//
-//        MutablePropertySources propertySources = env.getPropertySources();
-//        propertySources.addFirst(propertySource);
-
-//        System.out.println("b-uri: " + databaseConfig.getUri());
-//        System.out.println("b-username: " + databaseConfig.getUsername());
-//        System.out.println("b-password: " + databaseConfig.getPassword());
-//        databaseConfig.setUri(uri);
-//        databaseConfig.setUsername(userMessage.username);
-//        databaseConfig.setPassword(userMessage.password);
-//        System.out.println("uri: " + databaseConfig.getUri());
-//        System.out.println("username: " + databaseConfig.getUsername());
-//        System.out.println("password: " + databaseConfig.getPassword());
 
         try {
             // 加载.properties文件
