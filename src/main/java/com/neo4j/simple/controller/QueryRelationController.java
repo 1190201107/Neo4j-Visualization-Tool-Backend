@@ -2,6 +2,7 @@ package com.neo4j.simple.controller;
 
 import com.neo4j.simple.VO.Neo4jBasicRelationReturnVO;
 import com.neo4j.simple.VO.RelationDTO;
+import com.neo4j.simple.VO.RelationshipTypesVO;
 import com.neo4j.simple.entity.CommonResult;
 import com.neo4j.simple.entity.Neo4jQueryRelation;
 import com.neo4j.simple.service.QueryRelationService;
@@ -49,4 +50,10 @@ public class QueryRelationController {
     public CommonResult<HashMap<String, Map>> searchGraphByRelationType(@RequestParam("type") String type){
         return new CommonResult<HashMap<String, Map>>().success().data(queryRelationService.searchGraphByRelationType(type));
     }
+
+    @PostMapping("/searchRelationshipsByTypes")
+    public CommonResult<HashMap<String, Map>> searchRelationshipsByTypes(@RequestBody RelationshipTypesVO types){
+        return new CommonResult<HashMap<String, Map>>().success().data(queryRelationService.searchRelationshipsbyTypes(types));
+    }
+
 }
